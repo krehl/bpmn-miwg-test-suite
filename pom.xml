@@ -38,6 +38,73 @@
     </repository>
   </distributionManagement>
 
+  <profiles>
+    <profile>
+      <id>bootstrap</id>
+      <!-- 
+        Unfortunately activation does not expand properties so we cannot
+        enable this automatically based on presence of the plugin in the 
+        local repo 
+      --> 
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+	<plugins>
+	  <plugin>
+	    <artifactId>maven-antrun-plugin</artifactId>
+	    <version>1.8</version>
+	    <executions>
+	      <execution>
+		<phase>test</phase>
+		<goals>
+		  <goal>run</goal>
+		</goals>
+		<configuration>
+		  <target>
+                    <echo>WARNING: **************************************</echo>
+		    <echo>WARNING: No BPMN MIWG analysis tools will run. </echo>
+		    <echo>WARNING: To activate re-run with -Panalysis    </echo>
+                    <echo>WARNING: **************************************</echo>
+		  </target>
+		</configuration>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
+    <profile>
+      <!-- 
+        Unfortunately activation does not expand properties so we cannot
+        enable this automatically based on presence of the plugin in the 
+        local repo 
+      --> 
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <id>analysis</id>
+      <build>
+	<plugins>
+	<!-- This binds the BPMN MIWG analysis tools to the test phase of the Maven lifecycle -->
+	  <plugin>
+	    <groupId>org.omg.bpmn.miwg</groupId>
+	    <artifactId>bpmn-miwg-maven-plugin</artifactId>
+	    <version>${bpmn-miwg-tools.version}</version>
+	    <executions>
+	      <execution>
+		<phase>test</phase>
+		<goals>
+		  <goal>test</goal>
+		</goals>
+	      </execution>
+	    </executions>        
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
+  </profiles>
+
   <build>
     <resources>
       <resource>
@@ -104,20 +171,6 @@
             <phase>deploy</phase>
           </execution>
         </executions>
-      </plugin>
-      <!-- This binds the BPMN MIWG analysis tools to the test phase of the Maven lifecycle -->
-      <plugin>
-        <groupId>org.omg.bpmn.miwg</groupId>
-        <artifactId>bpmn-miwg-maven-plugin</artifactId>
-        <version>${bpmn-miwg-tools.version}</version>
-        <executions>
-          <execution>
-            <phase>test</phase>
-            <goals>
-	          <goal>test</goal>
-	        </goals>
-          </execution>
-        </executions>        
       </plugin>
     </plugins>
   </build>
